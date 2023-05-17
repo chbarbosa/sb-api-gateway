@@ -19,7 +19,7 @@ public class BasicAuthWebSecurityConfiguration
   //private AppBasicAuthenticationEntryPoint authenticationEntryPoint;
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-      http.authorizeRequests(requests -> requests
+      http.authorizeHttpRequests(requests -> requests
               .antMatchers("/public/*").permitAll()
               .anyRequest().authenticated())
               .httpBasic(withDefaults());
