@@ -2,25 +2,31 @@ package dev.ola.olaapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.cloud.gateway.route.RouteLocator;
+import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
+import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-@RestController
 public class OlaApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(OlaApiApplication.class, args);
 	}
+	
+	@Bean
+	public RouteLocator myRoutes(RouteLocatorBuilder builder) {
+		return builder.routes()
 
-	@GetMapping("/public/hello")
-	String publicHello() {
-		return "hello world";
+			.route(p -> p
+				.path("/api/user/**")
+				.and().method("GET")
+				.filters(f -> f.addRequestHeader("Authorization", "Bearer " + genToken()))
+				.uri("http://localhost:8081"))
+			.build();
 	}
 
-	@GetMapping("/hello")
-	String hello() {
-		return "hello stranger";
+	private String genToken() {
+		return null;
 	}
 
 }
